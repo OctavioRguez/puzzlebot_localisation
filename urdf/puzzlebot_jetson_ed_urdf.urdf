@@ -1,11 +1,17 @@
 <?xml version="1.0"?>
 <robot name="Puzzlebot Jetson-Lidar Ed.">
 
-    <!-- Dummy link to fix robot chassis -->
-    <link name="base_link">
-    </link>
 
-    <!-- Chassis link representing the main body of the robot -->
+<!-- Dummy link to fiz robot chassis -->
+  <link name="base_link">
+  </link>
+  
+    <joint name="chassis_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis"/>
+        <origin xyz="0.0 0.0 0.05"/>
+    </joint>
+
     <link name="chassis">
         <inertial>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -26,47 +32,9 @@
         </visual>
     </link>
 
-    <!-- Left wheel link -->
-    <link name="wl_link">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://puzzlebot_localisation/models/MCR2_1000_1_1_Wheel_Coupler_2.stl"/>
-            </geometry>
-        </visual>
-    </link>
 
-    <!-- Right wheel link -->
-    <link name="wr_link">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://puzzlebot_localisation/models/MCR2_1000_1_1_Wheel_Coupler_2.stl"/>
-            </geometry>
-        </visual>
-    </link>
 
-    <!-- Fixed joint connecting base_link to chassis -->
-    <joint name="chassis_joint" type="fixed">
-        <parent link="base_link"/>
-        <child link="chassis"/>
-        <origin xyz="0.0 0.0 0.05"/>
-    </joint>
+<!-- FINISH THE URDF-->
 
-    <!-- Continuous joint for the left wheel -->
-    <joint name="left_wheel" type="continuous">
-        <parent link="chassis"/>
-        <child link="wl_link"/>
-        <origin xyz="0 0 0"/>
-        <axis xyz="0 0 1"/>
-    </joint>
-
-    <!-- Continuous joint for the right wheel -->
-    <joint name="right_wheel" type="continuous">
-        <parent link="chassis"/>
-        <child link="wr_link"/>
-        <origin xyz="0 0 0"/>
-        <axis xyz="0 0 1"/>
-    </joint>
 
 </robot>
