@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+        <!-- Parameters file -->
+        <rosparam file="$(find puzzlebot_localisation)/config/puzzlebot.yaml"/>
+
+        <!-- Nodes -->
+        <node pkg="puzzlebot_localisation" type="puzzlebot_sim.py" name="simulation" output="screen"/>
+        <node pkg="puzzlebot_localisation" type="localisation.py" name="localisation" output="screen"/>
+        <node pkg="puzzlebot_localisation" type="joint_state_pub.py" name="joint_states_publisher" output="screen"/>
+
+        <!-- Simulation plots -->
+        <!-- <node name="LinearPlots" pkg="rqt_plot" type="rqt_plot" args="/pose/pose/position/x /pose/pose/position/y" />
+        <node name="AngularPlots" pkg="rqt_plot" type="rqt_plot" args="/pose/pose/orientation/z" />
+        <node name="WheelPlots" pkg="rqt_plot" type="rqt_plot" args="/wr /wl" /> -->
+
+        <!-- Odom plots -->
+        <!-- <node name="odomVelPlots" pkg="rqt_plot" type="rqt_plot" args="/odom/twist/twist/linear/x /odom/twist/twist/angular/z" />
+        <node name="odomPlots" pkg="rqt_plot" type="rqt_plot" args="/odom/pose/pose/position/x /odom/pose/pose/position/y" />
+        <node name="odomAngularPlots" pkg="rqt_plot" type="rqt_plot" args="/odom/pose/pose/orientation/z" /> -->
+</launch>

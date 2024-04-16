@@ -165,9 +165,9 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
-  scripts/puzzlebot_sim.py
-  scripts/localisation.py 
-  scripts/joint_state_pub.py
+  scripts/Nodes/puzzlebot_sim.py
+  scripts/Nodes/localisation.py 
+  scripts/Nodes/joint_state_pub.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+
+# Import python libraries
 import rospy
 import numpy as np
 
@@ -9,11 +11,16 @@ class Puzzlebot:
         self._r = rospy.get_param("/puzzlebot/wheel_radius", default = 5.0)
         self._last_time = 0.0
 
+        # Puzzlebot states
+        self._states = {"x":0.0, "y":0.0, "theta":0.0}
+        self._v, self._w = 0.0, 0.0
+
     # Get the time difference for dt
     def _get_dt(self):
         current_time = rospy.Time.now()
-        self._dt = (current_time - self._last_time).to_sec()
+        dt = (current_time - self._last_time).to_sec()
         self._last_time = current_time
+        return dt
 
     # Wrap to pi function
     def _wrap_to_Pi(self, theta):
