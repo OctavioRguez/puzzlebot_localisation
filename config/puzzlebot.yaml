@@ -1,0 +1,4 @@
+puzzlebot:
+  wheelbase: 19.0
+  wheel_radius: 5.0
+node_rate: 100

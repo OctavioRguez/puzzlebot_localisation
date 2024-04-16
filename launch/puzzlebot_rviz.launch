@@ -1,13 +1,27 @@
 <?xml version="1.0"?>
 <launch>
+        <!-- Parameters file -->
+        <rosparam file="$(find puzzlebot_localisation)/config/puzzlebot.yaml"/>
 
-        <node pkg="tf2_ros" type="static_transform_publisher" name="map_joint" args="odomPose_x  odomPose_y  odomPose_z  odomPose_roll  odomPose_pitch  odomPose_yaw   map   odom"/>
+        <!-- Transform -->
+        <node pkg="tf2_ros" type="static_transform_publisher" name="map_joint" args="odomPose_x  odomPose_y  
+        odomPose_z  odomPose_roll  odomPose_pitch  odomPose_yaw   map   odom"/>
 
-        <arg name="puzzlebot_sim_model" default="$(find localisation)/urdf/puzzlebot_jetson_ed_urdf.urdf"/>
+        <!-- urdf model -->
+        <arg name="puzzlebot_sim_model" default="$(find puzzlebot_localisation)/urdf/puzzlebot_jetson_ed_urdf.urdf"/>
         <param name="robot_description" command="cat $(arg puzzlebot_sim_model)" />
 
+        <!-- Nodes -->
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="simulated_state_publisher" output="screen"/>
+        <!-- <node pkg="puzzlebot_localisation" type="puzzlebot_sim.py" name="simulation"/>
+        <node pkg="puzzlebot_localisation" type="localisation.py" name="localisation"/> -->
 
+        <!-- Rviz -->
+        <arg name="rvizconfig" default="$(find puzzlebot_localisation)/rviz/puzzlebot.rviz"/>
         <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" /> 
 
+        <!-- Rqt plot -->
+        <!-- <node name="LinearPlots" pkg="rqt_plot" type="rqt_plot" args="/pose/pose/position/x /pose/pose/position/y" />
+        <node name="AngularPlots" pkg="rqt_plot" type="rqt_plot" args="/pose/pose/orientation/z" />
+        <node name="WheelPlots" pkg="rqt_plot" type="rqt_plot" args="/wr /wl" /> -->
 </launch>
