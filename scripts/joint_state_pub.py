@@ -16,6 +16,7 @@ if __name__ == "__main__":
     try:    
         while not rospy.is_shutdown():
             joint_state_pub.publish_joint_states()
+            joint_state_pub.update_transform()
             rate.sleep()
 
     except rospy.ROSInterruptException:

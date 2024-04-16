@@ -6,6 +6,7 @@
         <!-- Transform -->
         <node pkg="tf2_ros" type="static_transform_publisher" name="map_joint" args="odomPose_x  odomPose_y  
         odomPose_z  odomPose_roll  odomPose_pitch  odomPose_yaw   map   odom"/>
+        <node name="tf_publisher" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 odom base_link"/>
 
         <!-- urdf model -->
         <arg name="puzzlebot_sim_model" default="$(find puzzlebot_localisation)/urdf/puzzlebot_jetson_ed_urdf.urdf"/>
@@ -13,17 +14,20 @@
 
         <!-- Nodes -->
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="simulated_state_publisher" output="screen"/>
-        <!-- <node pkg="puzzlebot_localisation" type="puzzlebot_sim.py" name="simulation"/>
-        <node pkg="puzzlebot_localisation" type="localisation.py" name="localisation"/> -->
+        <node pkg="puzzlebot_localisation" type="puzzlebot_sim.py" name="simulation"/>
+        <node pkg="puzzlebot_localisation" type="localisation.py" name="localisation"/>
+        <node pkg="puzzlebot_localisation" type="joint_state_pub.py" name="joint_states_publisher"/>
 
         <!-- Rviz -->
         <arg name="rvizconfig" default="$(find puzzlebot_localisation)/rviz/puzzlebot.rviz"/>
         <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" /> 
 
-        <!-- Rqt plot -->
+        <!-- Simulation plots -->
         <!-- <node name="LinearPlots" pkg="rqt_plot" type="rqt_plot" args="/pose/pose/position/x /pose/pose/position/y" />
         <node name="AngularPlots" pkg="rqt_plot" type="rqt_plot" args="/pose/pose/orientation/z" />
         <node name="WheelPlots" pkg="rqt_plot" type="rqt_plot" args="/wr /wl" /> -->
+
+        <!-- Odom plots -->
         <!-- <node name="odomVelPlots" pkg="rqt_plot" type="rqt_plot" args="/odom/twist/twist/linear/x /odom/twist/twist/angular/z" />
         <node name="odomPlots" pkg="rqt_plot" type="rqt_plot" args="/odom/pose/pose/position/x /odom/pose/pose/position/y" />
         <node name="odomAngularPlots" pkg="rqt_plot" type="rqt_plot" args="/odom/pose/pose/orientation/z" /> -->
