@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import rospy
+from Classes import Joint_States
 
 if __name__ == "__main__":
     # Initialise and Setup node
@@ -9,11 +10,12 @@ if __name__ == "__main__":
     rate = rospy.Rate(rospy.get_param('/node_rate', default = 10))
 
     # Classes
-    # joint_state_pub = JointStatePublisher()
+    joint_state_pub = Joint_States()
 
     print("The Puzzlebot joint state publisher is Running")
     try:    
         while not rospy.is_shutdown():
+            joint_state_pub.publish_joint_states()
             rate.sleep()
 
     except rospy.ROSInterruptException:

@@ -24,4 +24,7 @@
         <!-- <node name="LinearPlots" pkg="rqt_plot" type="rqt_plot" args="/pose/pose/position/x /pose/pose/position/y" />
         <node name="AngularPlots" pkg="rqt_plot" type="rqt_plot" args="/pose/pose/orientation/z" />
         <node name="WheelPlots" pkg="rqt_plot" type="rqt_plot" args="/wr /wl" /> -->
+        <!-- <node name="odomVelPlots" pkg="rqt_plot" type="rqt_plot" args="/odom/twist/twist/linear/x /odom/twist/twist/angular/z" />
+        <node name="odomPlots" pkg="rqt_plot" type="rqt_plot" args="/odom/pose/pose/position/x /odom/pose/pose/position/y" />
+        <node name="odomAngularPlots" pkg="rqt_plot" type="rqt_plot" args="/odom/pose/pose/orientation/z" /> -->
 </launch>

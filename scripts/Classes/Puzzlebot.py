@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import rospy
+import numpy as np
 
 class Puzzlebot:
     def __init__(self):
@@ -13,3 +14,10 @@ class Puzzlebot:
         current_time = rospy.Time.now()
         self._dt = (current_time - self._last_time).to_sec()
         self._last_time = current_time
+
+    # Wrap to pi function
+    def _wrap_to_Pi(self, theta):
+        result = np.fmod((theta + np.pi),(2 * np.pi))
+        if (result < 0):
+            result += 2 * np.pi
+        return result - np.pi

@@ -43,7 +43,7 @@ class Localization(Puzzlebot):
         # Update pose
         self.__states["x"] += self.__delta_s * np.cos(self.__states["theta"] + self.__delta_theta / 2.0)
         self.__states["y"] += self.__delta_s * np.sin(self.__states["theta"] + self.__delta_theta / 2.0)
-        self.__states["theta"] += self.__delta_theta
+        self.__states["theta"] = self._wrap_to_Pi(self.__states["theta"] + self.__delta_theta)
     
     def publish_odometry(self):
         # Publish odometry message

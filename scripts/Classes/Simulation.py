@@ -30,19 +30,12 @@ class Simulation(Puzzlebot):
         self.__v = msg.linear.x
         self.__w = msg.angular.z
 
-    # Wrap to pi function
-    def __wrap_to_Pi(self, theta):
-        result = np.fmod((theta + np.pi),(2 * np.pi))
-        if (result < 0):
-            result += 2 * np.pi
-        return result - np.pi
-
     # Solve model
     def solve_equations(self):
         # Get the time step
         self._get_dt()
         # Update rover angle
-        self.__states["theta"] = self.__wrap_to_Pi(self.__states["theta"] + self.__w*self._dt)
+        self.__states["theta"] = self._wrap_to_Pi(self.__states["theta"] + self.__w*self._dt)
         # Get rover position
         self.__states["x"] += self.__v*np.cos(self.__states["theta"])*self._dt
         self.__states["y"] += self.__v*np.sin(self.__states["theta"])*self._dt
