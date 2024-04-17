@@ -3,10 +3,12 @@
 # Import python libraries
 import rospy
 import numpy as np
+from tf.transformations import quaternion_from_euler
 
 # Import ROS messages
 from std_msgs.msg import Float32
 from nav_msgs.msg import Odometry
+from geometry_msgs.msg import Quaternion
 
 # Import Classes
 from .Puzzlebot import Puzzlebot
@@ -14,7 +16,7 @@ from .Puzzlebot import Puzzlebot
 class Localization(Puzzlebot):
     def __init__(self):
         # Initialize the puzzlebot attributes
-        super().__init__()
+        Puzzlebot.__init__(self)
 
         # Initial wheel velocities
         self.__wr, self.__wl = 0.0, 0.0
@@ -61,7 +63,9 @@ class Localization(Puzzlebot):
         # Set the position
         self.__odom.pose.pose.position.x = self._states["x"]
         self.__odom.pose.pose.position.y = self._states["y"]
-        self.__odom.pose.pose.orientation.z = self._states["theta"]
+
+        # Set the orientation
+        self.__odom.pose.pose.orientation = Quaternion(*quaternion_from_euler(0, 0, self._states["theta"]))
 
         # Set the velocities
         self.__odom.twist.twist.linear.x = self._v

@@ -12,7 +12,7 @@ from .Puzzlebot import Puzzlebot
 class Set_Point(Puzzlebot):
     def __init__(self):
         # Initialize the puzzlebot attributes
-        super().__init__()
+        Puzzlebot.__init__(self)
 
         # Declare the publish messagess
         self.__points = Polygon()

@@ -3,6 +3,7 @@
 # Import python libraries
 import rospy
 import numpy as np
+from tf.transformations import euler_from_quaternion
 
 # Import ROS messages
 from geometry_msgs.msg import Twist, Polygon
@@ -14,7 +15,7 @@ from .Puzzlebot import Puzzlebot
 class Controller(Puzzlebot):
     def __init__(self):
         # Initialize the puzzlebot attributes
-        super().__init__()
+        Puzzlebot.__init__(self)
 
         # Initialize variables
         self.__set_point = []
@@ -35,11 +36,13 @@ class Controller(Puzzlebot):
 
     # Callback function for the odometry
     def __callback_odom(self, msg):
-        # Position and orientation
+        # Get position
         self._states["x"] = msg.pose.pose.position.x
         self._states["y"] = msg.pose.pose.position.y
-        self._states["theta"] = msg.pose.pose.orientation.z
-        # Velocity
+        # Get orientation
+        q = msg.pose.pose.orientation
+        self._states["theta"] = euler_from_quaternion([q.x, q.y, q.z, q.w])[2]
+        # Get Velocity
         self._v = msg.twist.twist.linear.x
         self._w = msg.twist.twist.angular.z
 

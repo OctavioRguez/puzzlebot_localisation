@@ -3,10 +3,11 @@
 # Import python libraries
 import rospy
 import numpy as np
+from tf.transformations import quaternion_from_euler
 
 # Import ROS messages
 from std_msgs.msg import Float32
-from geometry_msgs.msg import Twist, PoseStamped
+from geometry_msgs.msg import Twist, PoseStamped, Quaternion
 
 # Import Classes
 from .Puzzlebot import Puzzlebot
@@ -14,7 +15,7 @@ from .Puzzlebot import Puzzlebot
 class Simulation(Puzzlebot):
     def __init__(self):
         # Initialize the puzzlebot attributes
-        super().__init__()
+        Puzzlebot.__init__(self)
 
         # Declare the publish messages
         self.__position = PoseStamped()
@@ -48,7 +49,7 @@ class Simulation(Puzzlebot):
         self.__position.header.stamp = rospy.Time.now()
         self.__position.pose.position.x = self._states["x"]
         self.__position.pose.position.y = self._states["y"]
-        self.__position.pose.orientation.z = self._states["theta"]
+        self.__position.pose.orientation = Quaternion(*quaternion_from_euler(0, 0, self._states["theta"]))
         # Publish the position
         self.__pose_pub.publish(self.__position)
 

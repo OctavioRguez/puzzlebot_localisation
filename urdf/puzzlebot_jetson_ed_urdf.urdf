@@ -28,7 +28,7 @@
     <!-- Left wheel link -->
     <link name="wl_link">
         <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="1.57079632679 0 0" xyz="0.05 0.095 0"/>
             <geometry>
                 <mesh filename="package://puzzlebot_localisation/models/MCR2_1000_1_1_Wheel_Coupler_2.stl"/>
             </geometry>
@@ -38,7 +38,7 @@
     <!-- Right wheel link -->
     <link name="wr_link">
         <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="-1.57079632679 0 0" xyz="0.05 -0.095 0"/>
             <geometry>
                 <mesh filename="package://puzzlebot_localisation/models/MCR2_1000_1_1_Wheel_Coupler_2.stl"/>
             </geometry>
@@ -56,16 +56,14 @@
     <joint name="rightWheel" type="continuous">
         <parent link="chassis"/>
         <child link="wr_link"/>
-        <origin xyz="0 0 0"/>
-        <axis xyz="0 0 1"/>
+        <origin xyz="0.0 0.0 0.0"/>
     </joint>
 
     <!-- Continuous joint for the left wheel -->
     <joint name="leftWheel" type="continuous">
         <parent link="chassis"/>
         <child link="wl_link"/>
-        <origin xyz="0 0 0"/>
-        <axis xyz="0 0 1"/>
+        <origin xyz="0.0 0.0 0.0"/>
     </joint>
     
 </robot>

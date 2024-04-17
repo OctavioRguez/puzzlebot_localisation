@@ -3,9 +3,10 @@
 # Import python libraries
 import rospy
 from tf2_ros import TransformBroadcaster
+from tf.transformations import quaternion_from_euler, euler_from_quaternion
 
 # Import ROS messages
-from geometry_msgs.msg import TransformStamped
+from geometry_msgs.msg import TransformStamped, Quaternion
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import JointState
 
@@ -15,7 +16,7 @@ from .Puzzlebot import Puzzlebot
 class Joint_States(Puzzlebot):
     def __init__(self):
         # Initialize the puzzlebot attributes
-        super().__init__()
+        Puzzlebot.__init__(self)
 
         # Declare the publish messages
         self.__joints = JointState()
@@ -34,11 +35,13 @@ class Joint_States(Puzzlebot):
 
     # Callback function for the odometry
     def __callback_odom(self, msg):
-        # Position and orientation
+        # Get position
         self._states["x"] = msg.pose.pose.position.x
         self._states["y"] = msg.pose.pose.position.y
-        self._states["theta"] = msg.pose.pose.orientation.z
-        # Velocity
+        # Get orientation
+        q = msg.pose.pose.orientation
+        self._states["theta"] = euler_from_quaternion([q.x, q.y, q.z, q.w])[2]
+        # Get Velocity
         self._v = msg.twist.twist.linear.x
         self._w = msg.twist.twist.angular.z
     
@@ -59,6 +62,6 @@ class Joint_States(Puzzlebot):
         # Set the transform translation and rotation
         self.__tf.transform.translation.x = self._states["x"]
         self.__tf.transform.translation.y = self._states["y"]
-        self.__tf.transform.rotation.z = self._states["theta"]
+        self.__tf.transform.rotation = Quaternion(*quaternion_from_euler(0, 0, self._states["theta"]))
         # Publish the transform
         self.__tf_broadcaster.sendTransform(self.__tf)
