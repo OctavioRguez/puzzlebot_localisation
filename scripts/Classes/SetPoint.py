@@ -26,19 +26,19 @@ class Set_Point(Puzzlebot):
     
     # Points for the pentagon trajectory
     def __pentagon(self):
-        self.__points.points = [Point(1, 0, 0), Point(0.5, 1, 0), Point(0, 0.5, 0), Point(0, 0, 0), Point(1, 0, 0)]
+        self.__points.points = [Point(1, 0, 0), Point(1, 0.5, 0), Point(0.5, 1, 0), Point(0, 0.5, 0), Point(0, 0, 0)]
     
     # Points for the triangle trajectory
     def __triangle(self):
-        self.__points.points = [Point(1, 0, 0), Point(0.5, 0.5, 0), Point(0, 0, 0)]
+        self.__points.points = [Point(1, 0, 0), Point(0.5, 1, 0), Point(0, 0, 0)]
 
     # Set the trajectory type
     def setTrajectory(self):
         if self._trajectory == "square":
             self.__square()
-        elif self._trajectory == "pentagon":
+        elif self._trajectory == "Pentagon":
             self.__pentagon()
-        elif self._trajectory == "triangle":
+        elif self._trajectory == "Triangle":
             self.__triangle()
         else:
             rospy.loginfo("Invalid trajectory")
