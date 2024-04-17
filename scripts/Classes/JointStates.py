@@ -54,7 +54,8 @@ class Joint_States(Puzzlebot):
         dt = self._get_dt()
         self.__wrp += (self._v/self._r) + (self._w*self._l / (2*self._r))*dt
         self.__wlp += (self._v/self._r) - (self._w*self._l / (2*self._r))*dt
-        self.__joints.position = [self.__wlp, self.__wrp]
+        self.__joints.position = [self.__wlp, -self.__wrp]
+        self.__joints.velocity = [(self._v/self._r) - (self._w*self._l / (2*self._r)), (self._v/self._r) + (self._w*self._l / (2*self._r))]
         # Publish the joint states
         self.__joints_pub.publish(self.__joints)
 
