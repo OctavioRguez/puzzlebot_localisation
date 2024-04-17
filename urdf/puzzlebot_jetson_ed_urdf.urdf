@@ -22,26 +22,47 @@
             <geometry>
                 <mesh filename="package://puzzlebot_localisation/models/MCR2_1000_13_Chassis.stl"/>
             </geometry>
+            <material name="Plastic">
+                <color rgba="0.62 0.62 0.588 0.702"/>
+            </material>
         </visual>
     </link>
 
     <!-- Left wheel link -->
     <link name="wl_link">
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://puzzlebot_localisation/models/MCR2_1000_1_1_Wheel_Coupler_2.stl"/>
+            </geometry>
+        </collision>
         <visual>
             <origin rpy="1.57079632679 0 0" xyz="0.05 0.095 0"/>
             <geometry>
                 <mesh filename="package://puzzlebot_localisation/models/MCR2_1000_1_1_Wheel_Coupler_2.stl"/>
             </geometry>
+            <material name="Rubber">
+                <color rgba="0.188 0.188 0.176 1.0"/>
+            </material>
         </visual>
     </link>
 
     <!-- Right wheel link -->
     <link name="wr_link">
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://puzzlebot_localisation/models/MCR2_1000_1_1_Wheel_Coupler_2.stl"/>
+            </geometry>
+        </collision>
         <visual>
             <origin rpy="-1.57079632679 0 0" xyz="0.05 -0.095 0"/>
             <geometry>
                 <mesh filename="package://puzzlebot_localisation/models/MCR2_1000_1_1_Wheel_Coupler_2.stl"/>
             </geometry>
+            <material name="Rubber">
+                <color rgba="0.188 0.188 0.176 1.0"/>
+            </material>
         </visual>
     </link>
 
@@ -57,6 +78,7 @@
         <parent link="chassis"/>
         <child link="wr_link"/>
         <origin xyz="0.0 0.0 0.0"/>
+        <axis xyz="1 0 0" />
     </joint>
 
     <!-- Continuous joint for the left wheel -->
@@ -64,6 +86,7 @@
         <parent link="chassis"/>
         <child link="wl_link"/>
         <origin xyz="0.0 0.0 0.0"/>
+        <axis xyz="1 0 0" />
     </joint>
     
 </robot>

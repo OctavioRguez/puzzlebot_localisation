@@ -52,7 +52,7 @@ Visualization Manager:
       Value: true
     - Alpha: 1
       Class: rviz/RobotModel
-      Collision Enabled: false
+      Collision Enabled: true
       Enabled: true
       Links:
         All Links Enabled: true
@@ -146,7 +146,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.6326146125793457
+      Distance: 2.9989895820617676
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -154,17 +154,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.6249812841415405
-        Y: 0.3869816064834595
-        Z: 0.17869392037391663
+        X: 0.505582332611084
+        Y: 0.24644023180007935
+        Z: -0.0933464840054512
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.785398006439209
+      Pitch: 1.285398006439209
       Target Frame: <Fixed Frame>
-      Yaw: 0.7703980207443237
+      Yaw: 4.70858097076416
     Saved: ~
 Window Geometry:
   Displays:
@@ -182,5 +182,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1267
-  X: 258
-  Y: -5
+  X: 510
+  Y: -27

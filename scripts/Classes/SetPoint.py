@@ -14,6 +14,13 @@ class Set_Point(Puzzlebot):
         # Initialize the puzzlebot attributes
         Puzzlebot.__init__(self)
 
+        # Set the available trajectories
+        self.__trajectories = {
+            "Square" : self.__square, 
+            "Pentagon" : self.__pentagon, 
+            "Triangle" : self.__triangle
+        }
+
         # Declare the publish messagess
         self.__points = Polygon()
 
@@ -34,12 +41,9 @@ class Set_Point(Puzzlebot):
 
     # Set the trajectory type
     def setTrajectory(self):
-        if self._trajectory == "square":
-            self.__square()
-        elif self._trajectory == "Pentagon":
-            self.__pentagon()
-        elif self._trajectory == "Triangle":
-            self.__triangle()
-        else:
-            rospy.loginfo("Invalid trajectory")
+        if self._trajectory not in self.__trajectories:
+            rospy.logerr("Invalid trajectory")
+            return
+        # Set the points for the trajectory
+        self.__trajectories[self._trajectory]()
         self.__points_pub.publish(self.__points)
