@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
 import rospy
-from Classes import Joint_States
+from Classes import Controller
 
 if __name__ == "__main__":
     # Initialise and Setup node
-    rospy.init_node('Puzzlebot_Joint_State_Publisher')
+    rospy.init_node('Puzzlebot_Controller')
 
     # Configure the Node
     rate = rospy.Rate(rospy.get_param('/node_rate', default = 10))
 
     # Classes
-    joints = Joint_States()
+    controlHandler = Controller()
 
-    print("The Puzzlebot joint state publisher is Running")
+    print("The Puzzlebot control is Running")
     try:    
         while not rospy.is_shutdown():
-            joints.publish_joint_states()
-            joints.update_transform()
+            controlHandler.control()
             rate.sleep()
 
     except rospy.ROSInterruptException:

@@ -9,6 +9,7 @@ class Puzzlebot:
         # Initial puzzlebot parameters
         self._l = rospy.get_param("/puzzlebot/wheelbase", default = 19.0)
         self._r = rospy.get_param("/puzzlebot/wheel_radius", default = 5.0)
+        self._trajectory = rospy.get_param("/puzzlebot/trajectory", default = "square")
         self._last_time = 0.0
 
         # Puzzlebot states

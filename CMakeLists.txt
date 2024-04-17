@@ -168,6 +168,8 @@ catkin_install_python(PROGRAMS
   scripts/Nodes/puzzlebot_sim.py
   scripts/Nodes/localisation.py 
   scripts/Nodes/joint_state_pub.py
+  scripts/Nodes/control.py
+  scripts/Nodes/set_point_generator.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

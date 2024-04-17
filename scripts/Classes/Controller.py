@@ -5,8 +5,7 @@ import rospy
 import numpy as np
 
 # Import ROS messages
-from std_msgs.msg import Float32MultiArray
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, Polygon
 from nav_msgs.msg import Odometry
 
 # Import Classes
@@ -19,6 +18,10 @@ class Controller(Puzzlebot):
 
         # Initialize variables
         self.__set_point = []
+        self.__kpt, self.__kpr = 0.5, 0.5
+        self.__vmax, self.__wmax = 0.2, 0.2
+        self.__error = 0.0
+        self.__i = 0
 
         # Declare the publish messagess
         self.__vel = Twist()
@@ -28,7 +31,7 @@ class Controller(Puzzlebot):
         
         # Subscribe to the odometry and set_point topics
         rospy.Subscriber("/odom", Odometry, self.__callback_odom)
-        rospy.Subscriber("/set_point", Float32MultiArray, self.__set_point_callback)
+        rospy.Subscriber("/set_point", Polygon, self.__set_point_callback)
 
     # Callback function for the odometry
     def __callback_odom(self, msg):
@@ -42,13 +45,27 @@ class Controller(Puzzlebot):
 
     # Callback function for the set point
     def __set_point_callback(self, msg):
-        self.__set_point = msg.data
+        self.__set_point = msg.points
 
-    # Control function
     def control(self):
-        # Control law
-        self.__vel.linear.x = 0.5 * np.sqrt((self.__set_point[0] - self._states["x"])**2 + (self.__set_point[1] - self._states["y"])**2)
-        self.__vel.angular.z = 0.5 * (np.arctan2(self.__set_point[1] - self._states["y"], self.__set_point[0] - self._states["x"]) - self._states["theta"])
+        # Skip if the robot is not moving
+        if not self.__set_point or self.__i >= len(self.__set_point):
+            return
+        
+        # Calculate the errors
+        thetad = np.arctan2(self.__set_point[self.__i].y - self._states["y"], 
+                                self.__set_point[self.__i].x - self._states["x"])
+        thetae = (thetad - self._states["theta"])
 
-        # Publish the velocity
+        err = np.sqrt((self.__set_point[self.__i].x - self._states["x"])**2 + 
+                        (self.__set_point[self.__i].y - self._states["y"])**2) if thetae < 0.05 else 0.0
+        
+        # Calculate the control input
+        self.__vel.linear.x = self.__vmax*np.tanh(err * self.__kpt/self.__vmax)
+        self.__vel.angular.z = self.__wmax*np.tanh(thetae * self.__kpr/self.__wmax)
+
+        # Check if the robot has reached the set point
+        self.__i = self.__i + 1 if err < 0.05 and thetae < 0.05 else self.__i
+        
+        # Publish the control input
         self.__vel_pub.publish(self.__vel)

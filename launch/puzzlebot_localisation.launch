@@ -7,6 +7,8 @@
         <node pkg="puzzlebot_localisation" type="puzzlebot_sim.py" name="simulation" output="screen"/>
         <node pkg="puzzlebot_localisation" type="localisation.py" name="localisation" output="screen"/>
         <node pkg="puzzlebot_localisation" type="joint_state_pub.py" name="joint_states_publisher" output="screen"/>
+        <node pkg="puzzlebot_localisation" type="control.py" name="controller" output="screen"/>
+        <node pkg="puzzlebot_localisation" type="set_point_generator.py" name="set_point_generator" output="screen"/>
 
         <!-- Simulation plots -->
         <!-- <node name="LinearPlots" pkg="rqt_plot" type="rqt_plot" args="/pose/pose/position/x /pose/pose/position/y" />

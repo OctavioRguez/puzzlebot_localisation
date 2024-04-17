@@ -3,6 +3,7 @@
         <!-- Transform -->
         <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="map_joint" args="odomPose_x  odomPose_y  
         odomPose_z  odomPose_roll  odomPose_pitch  odomPose_yaw   map   odom"/> -->
+        
         <!-- Odom inertial frame -->
         <node name="tf_publisher" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 odom base_link"/>
 
