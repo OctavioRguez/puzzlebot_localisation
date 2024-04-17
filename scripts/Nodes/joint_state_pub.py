@@ -15,8 +15,11 @@ if __name__ == "__main__":
     print("The Puzzlebot joint state publisher is Running")
     try:    
         while not rospy.is_shutdown():
-            joints.publish_joint_states()
-            joints.update_transform()
+            if not joints._last_time:
+                joints._last_time = rospy.Time.now()
+            else:
+                joints.publish_joint_states()
+                joints.update_transform()
             rate.sleep()
 
     except rospy.ROSInterruptException:

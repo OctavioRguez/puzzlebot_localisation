@@ -21,6 +21,7 @@ class Joint_States(Puzzlebot):
         # Declare the publish messages
         self.__joints = JointState()
         self.__joints.name = ["leftWheel", "rightWheel"]
+        self.__wrp, self.__wlp = 0.0, 0.0
 
         self.__tf = TransformStamped()
         self.__tf.header.frame_id = "odom"
@@ -50,8 +51,10 @@ class Joint_States(Puzzlebot):
         # Set the joint header (time)
         self.__joints.header.stamp = rospy.Time.now()
         # Set the joint positions and velocities
-        self.__joints.position = [0.0, 0.0]
-        self.__joints.velocity = [(self._v/self._r) - (self._w*self._l / (2*self._r)), (self._v/self._r) + (self._w*self._l / (2*self._r))]
+        dt = self._get_dt()
+        self.__wrp += (self._v/self._r) + (self._w*self._l / (2*self._r))*dt
+        self.__wlp += (self._v/self._r) - (self._w*self._l / (2*self._r))*dt
+        self.__joints.position = [self.__wlp, self.__wrp]
         # Publish the joint states
         self.__joints_pub.publish(self.__joints)
 
