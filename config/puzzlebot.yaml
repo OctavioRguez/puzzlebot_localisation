@@ -1,5 +1,6 @@
 puzzlebot:
   wheelbase: 19.0
   wheel_radius: 5.0
-  trajectory: "Square" # Square, Pentagon, Triangle
+  hinge: 1.0
+  trajectory: "Triangle" # Square, Pentagon, Triangle
 node_rate: 100

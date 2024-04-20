@@ -19,8 +19,8 @@ class Controller(Puzzlebot):
 
         # Initialize variables
         self.__set_point = []
-        self.__kpt, self.__kpr = 1.0, 1.0
-        self.__vmax, self.__wmax = 0.2, 0.2
+        self.__vmax, self.__wmax = 0.15, 0.5
+        self.__kp = 5*np.eye(2)
         self.__i = 0
 
         # Declare the publish messagess
@@ -41,9 +41,6 @@ class Controller(Puzzlebot):
         # Get orientation
         q = msg.pose.pose.orientation
         self._states["theta"] = euler_from_quaternion([q.x, q.y, q.z, q.w])[2]
-        # Get Velocity
-        self._v = msg.twist.twist.linear.x
-        self._w = msg.twist.twist.angular.z
 
     # Callback function for the set point
     def __set_point_callback(self, msg):
@@ -55,20 +52,26 @@ class Controller(Puzzlebot):
             self.__i = 0
             return
         
-        # Calculate the errors
-        thetad = np.arctan2(self.__set_point[self.__i].y - self._states["y"], 
-                                self.__set_point[self.__i].x - self._states["x"])
-        thetae = self._wrap_to_Pi(thetad - self._states["theta"])
-
-        err = np.sqrt((self.__set_point[self.__i].x - self._states["x"])**2 + 
-                        (self.__set_point[self.__i].y - self._states["y"])**2) if thetae < 0.02 else 0.0
+        # Setup vectors
+        q = np.array([self._states["x"], self._states["y"]])
+        qd = np.array([self.__set_point[self.__i].x, self.__set_point[self.__i].y])
         
-        # Calculate the control input
-        self.__vel.linear.x = self.__vmax*np.tanh(err * self.__kpt/self.__vmax)
-        self.__vel.angular.z = self.__wmax*np.tanh(thetae * self.__kpr/self.__wmax)
+        # Control
+        err = qd - q
+        D = np.array([
+            [(self._r / 2 * np.cos(self._states["theta"]) - self._h*self._r / self._l * np.sin(self._states["theta"])),
+             (self._r / 2 * np.cos(self._states["theta"]) + self._h*self._r / self._l * np.sin(self._states["theta"]))],
+            [(self._r / 2 * np.sin(self._states["theta"]) + self._h*self._r / self._l * np.cos(self._states["theta"])), 
+             (self._r / 2 * np.sin(self._states["theta"]) - self._h*self._r / self._l * np.cos(self._states["theta"]))]
+        ])
+        u = np.dot(np.linalg.inv(D), np.dot(self.__kp, err))
+        q_dot = np.dot(D, u)
+        theta_dot = np.dot(np.array([[self._r / self._l, -self._r / self._l]]), u)
 
         # Check if the robot has reached the set point
-        self.__i = self.__i + 1 if err < 0.02 and thetae < 0.02 else self.__i
+        self.__i = self.__i + 1 if np.linalg.norm(err) < 0.05 else self.__i
         
         # Publish the control input
+        self.__vel.linear.x = self.__vmax*np.tanh(np.sqrt(q_dot[0]**2 + q_dot[1]**2) / self.__vmax)
+        self.__vel.angular.z = self.__wmax*np.tanh(theta_dot[0] / self.__wmax)
         self.__vel_pub.publish(self.__vel)
