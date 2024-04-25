@@ -23,6 +23,10 @@ class Controller(Puzzlebot):
         self.__kp = 5*np.eye(2)
         self.__i = 0
 
+        # Noise parameters
+        self.__mean = 0.0
+        self.__std = 1.8
+
         # Declare the publish messagess
         self.__vel = Twist()
 
@@ -65,8 +69,8 @@ class Controller(Puzzlebot):
              (self._r / 2 * np.sin(self._states["theta"]) - self._h*self._r / self._l * np.cos(self._states["theta"]))]
         ])
         u = np.dot(np.linalg.inv(D), np.dot(self.__kp, err))
-        q_dot = np.dot(D, u)
-        theta_dot = np.dot(np.array([[self._r / self._l, -self._r / self._l]]), u)
+        q_dot = np.dot(D, u) + np.random.normal(self.__mean, self.__std)
+        theta_dot = np.dot(np.array([[self._r / self._l, -self._r / self._l]]), u) + np.random.normal(self.__mean, self.__std)
 
         # Check if the robot has reached the set point
         self.__i = self.__i + 1 if np.linalg.norm(err) < 0.05 else self.__i
