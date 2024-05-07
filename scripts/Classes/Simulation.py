@@ -24,7 +24,6 @@ class Simulation(Puzzlebot):
         self.__pose_pub = rospy.Publisher("/pose", PoseStamped, queue_size = 10)
         self.__wr_pub = rospy.Publisher("/wr", Float32, queue_size = 10)
         self.__wl_pub = rospy.Publisher("/wl", Float32, queue_size = 10)
-        self.__theta_pub = rospy.Publisher("/theta", Float32, queue_size = 10)
 
         # Setup the subscribers
         rospy.Subscriber("/cmd_vel", Twist, self.__callback_cmd_vel)
@@ -53,7 +52,6 @@ class Simulation(Puzzlebot):
         self.__position.pose.orientation = Quaternion(*quaternion_from_euler(0, 0, self._states["theta"]))
         # Publish the position
         self.__pose_pub.publish(self.__position)
-        self.__theta_pub.publish(self._states["theta"])
 
     # Publish the velocities (wr, wl)
     def publish_velocities(self):

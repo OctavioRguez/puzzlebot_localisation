@@ -8,6 +8,6 @@
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="simulated_state_publisher" output="screen"/>
 
         <!-- Rviz -->
-        <arg name="rvizconfig" default="$(find puzzlebot_localisation)/rviz/puzzlebot.rviz"/>
-        <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" /> 
+        <!-- <arg name="rvizconfig" default="$(find puzzlebot_localisation)/rviz/puzzlebot.rviz"/>
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />  -->
 </launch>

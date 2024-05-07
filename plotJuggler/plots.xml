@@ -3,36 +3,30 @@
  <tabbed_widget name="Main Window" parent="main_window">
   <Tab containers="1" tab_name="Time plots">
    <Container>
-    <DockSplitter orientation="-" sizes="0.500548;0.499452" count="2">
+    <DockSplitter sizes="1" count="1" orientation="-">
      <DockArea name="...">
-      <plot style="Lines" flip_x="false" flip_y="false" mode="TimeSeries">
-       <range top="0.512500" bottom="-0.012489" right="1713664571.158826" left="1713664541.168657"/>
-       <limitY/>
-       <curve name="/cmd_vel/angular/z" color="#17becf"/>
-       <curve name="/cmd_vel/linear/x" color="#bcbd22"/>
-      </plot>
-     </DockArea>
-     <DockArea name="...">
-      <plot style="Lines" flip_x="false" flip_y="false" mode="TimeSeries">
-       <range top="3.296499" bottom="-3.295603" right="1713664571.158826" left="1713664541.168657"/>
+      <plot mode="TimeSeries" flip_x="false" style="Lines" flip_y="false">
+       <range left="1715102932.905173" bottom="-3.297040" top="3.297869" right="1715102962.904072"/>
        <limitY/>
        <curve name="/theta/data" color="#9467bd"/>
+       <curve name="/theta_kalman/data" color="#f14cc1"/>
       </plot>
      </DockArea>
     </DockSplitter>
    </Container>
   </Tab>
-  <Tab containers="1" tab_name="SImulation">
+  <Tab containers="1" tab_name="Simulation">
    <Container>
-    <DockSplitter orientation="-" sizes="1" count="1">
+    <DockSplitter sizes="1" count="1" orientation="-">
      <DockArea name="...">
-      <plot style="Lines" flip_x="false" flip_y="false" mode="XYPlot">
-       <range top="1.057860" bottom="-0.320543" right="1.652290" left="-0.509911"/>
+      <plot mode="XYPlot" flip_x="false" style="Lines" flip_y="false">
+       <range left="-1.067342" bottom="-0.695260" top="1.041348" right="1.050423"/>
        <limitY/>
-       <curve name="Rover" color="#d62728" curve_x="/pose/pose/position/x" curve_y="/pose/pose/position/y"/>
-       <curve name="Point1" color="#1ac938" curve_x="/set_point/points[0]/x" curve_y="/set_point/points[0]/y"/>
-       <curve name="Point2" color="#ff7f0e" curve_x="/set_point/points[1]/x" curve_y="/set_point/points[1]/y"/>
-       <curve name="Point3" color="#f14cc1" curve_x="/set_point/points[2]/x" curve_y="/set_point/points[2]/y"/>
+       <curve name="Rover" curve_x="/pose/pose/position/x" curve_y="/pose/pose/position/y" color="#d62728"/>
+       <curve name="Point1" curve_x="/set_point/points[0]/x" curve_y="/set_point/points[0]/y" color="#1ac938"/>
+       <curve name="Point2" curve_x="/set_point/points[1]/x" curve_y="/set_point/points[1]/y" color="#ff7f0e"/>
+       <curve name="Point3" curve_x="/set_point/points[2]/x" curve_y="/set_point/points[2]/y" color="#f14cc1"/>
+       <curve name="Kalman" curve_x="/kalman/pose/pose/position/x" curve_y="/kalman/pose/pose/position/y" color="#9467bd"/>
       </plot>
      </DockArea>
     </DockSplitter>
@@ -63,7 +57,7 @@
    <max_array_size value="100"/>
    <boolean_strings_to_number value="true"/>
    <remove_suffix_from_strings value="true"/>
-   <selected_topics value="/cmd_vel;/pose;/set_point;/theta"/>
+   <selected_topics value="/cmd_vel;/kalman;/pose;/set_point;/theta;/theta_kalman"/>
   </plugin>
   <plugin ID="UDP Server"/>
   <plugin ID="WebSocket Server"/>

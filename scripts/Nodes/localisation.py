@@ -19,7 +19,7 @@ if __name__ == "__main__":
                 puzzlebot._last_time = rospy.Time.now()
             else:
                 puzzlebot.update_odometry()
-                puzzlebot.publish_odometry()
+                puzzlebot.kalmanFilter()
             rate.sleep()
 
     except rospy.ROSInterruptException:

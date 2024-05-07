@@ -15,7 +15,10 @@ if __name__ == "__main__":
     print("The Puzzlebot control is Running")
     try:    
         while not rospy.is_shutdown():
-            controlHandler.control()
+            if not controlHandler._last_time:
+                controlHandler._last_time = rospy.Time.now()
+            else:
+                controlHandler.control()
             rate.sleep()
 
     except rospy.ROSInterruptException:

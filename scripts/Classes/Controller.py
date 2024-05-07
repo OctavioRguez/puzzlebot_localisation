@@ -6,7 +6,7 @@ import numpy as np
 from tf.transformations import euler_from_quaternion
 
 # Import ROS messages
-from geometry_msgs.msg import Twist, Polygon
+from geometry_msgs.msg import Twist, Polygon, Point32
 from nav_msgs.msg import Odometry
 
 # Import Classes
@@ -25,16 +25,17 @@ class Controller(Puzzlebot):
 
         # Noise parameters
         self.__mean = 0.0
-        self.__std = 1.8
+        self.__std = 1.5
 
         # Declare the publish messagess
         self.__vel = Twist()
 
         # Publisher for cmd_vel
         self.__vel_pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 10)
+        self.__point_pub = rospy.Publisher("/point", Point32, queue_size = 10)
         
         # Subscribe to the odometry and set_point topics
-        rospy.Subscriber("/odom", Odometry, self.__callback_odom)
+        rospy.Subscriber("/kalman", Odometry, self.__callback_odom)
         rospy.Subscriber("/set_point", Polygon, self.__set_point_callback)
 
     # Callback function for the odometry
@@ -59,23 +60,19 @@ class Controller(Puzzlebot):
         # Setup vectors
         q = np.array([self._states["x"], self._states["y"]])
         qd = np.array([self.__set_point[self.__i].x, self.__set_point[self.__i].y])
-        
+        self.__point_pub.publish(self.__set_point[self.__i])
+
         # Control
         err = qd - q
-        D = np.array([
-            [(self._r / 2 * np.cos(self._states["theta"]) - self._h*self._r / self._l * np.sin(self._states["theta"])),
-             (self._r / 2 * np.cos(self._states["theta"]) + self._h*self._r / self._l * np.sin(self._states["theta"]))],
-            [(self._r / 2 * np.sin(self._states["theta"]) + self._h*self._r / self._l * np.cos(self._states["theta"])), 
-             (self._r / 2 * np.sin(self._states["theta"]) - self._h*self._r / self._l * np.cos(self._states["theta"]))]
-        ])
-        u = np.dot(np.linalg.inv(D), np.dot(self.__kp, err))
-        q_dot = np.dot(D, u) + np.random.normal(self.__mean, self.__std)
-        theta_dot = np.dot(np.array([[self._r / self._l, -self._r / self._l]]), u) + np.random.normal(self.__mean, self.__std)
+        q_dot, theta_dot = self.system(self.__kp, self._states["theta"], err)
 
         # Check if the robot has reached the set point
         self.__i = self.__i + 1 if np.linalg.norm(err) < 0.05 else self.__i
-        
-        # Publish the control input
+
+        # Add noise to the control input
+        q_dot += np.random.normal(self.__mean, self.__std)
+        theta_dot += np.random.normal(self.__mean, self.__std)
+        # Publish the velocities
         self.__vel.linear.x = self.__vmax*np.tanh(np.sqrt(q_dot[0]**2 + q_dot[1]**2) / self.__vmax)
         self.__vel.angular.z = self.__wmax*np.tanh(theta_dot[0] / self.__wmax)
         self.__vel_pub.publish(self.__vel)

@@ -30,3 +30,16 @@ class Puzzlebot:
         if (result < 0):
             result += 2 * np.pi
         return result - np.pi
+    
+    def system(self, kp, theta, err):
+        # Control
+        D = np.array([
+            [(self._r / 2 * np.cos(theta) - self._h*self._r / self._l * np.sin(theta)),
+             (self._r / 2 * np.cos(theta) + self._h*self._r / self._l * np.sin(theta))],
+            [(self._r / 2 * np.sin(theta) + self._h*self._r / self._l * np.cos(theta)), 
+             (self._r / 2 * np.sin(theta) - self._h*self._r / self._l * np.cos(theta))]
+        ])
+        u = np.dot(np.linalg.inv(D), np.dot(kp, err))
+        q_dot = np.dot(D, u)
+        theta_dot = np.dot(np.array([[self._r / self._l, -self._r / self._l]]), u)
+        return q_dot, theta_dot
