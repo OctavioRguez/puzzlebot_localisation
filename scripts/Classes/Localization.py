@@ -27,13 +27,13 @@ class Localization(Puzzlebot):
         self.__x = np.array([0, 0, 0])
         self.__z = np.array([0, 0, 0])
         self.__C = np.eye(3)
-        self.__Q = np.array([[1, 0, 0],
-                            [0, 1, 0],
-                            [0, 0, 1]])
+        self.__Q = np.array([[0.03, 0, 0],
+                            [0, 0.03, 0],
+                            [0, 0, 0.03]])
         self.__P = self.__Q
-        self.__R = np.array([[1, 0, 0],
-                            [0, 1, 0],
-                            [0, 0, 1]])
+        self.__R = np.array([[1.5, 0, 0],
+                            [0, 1.5, 0],
+                            [0, 0, 1.5]])
 
         # Declare the publish messagess
         self.__odom = Odometry()
@@ -109,12 +109,12 @@ class Localization(Puzzlebot):
 
         # Kalman prediction
         dt = self._get_dt()
-        q_dot, theta_dot = self.system(5*np.eye(2), self.__x[2], self.__set_point - np.array([self.__x[0], self.__x[1]]))
-        self.__x = self.__x + (np.array([q_dot[0], q_dot[1], theta_dot[0]])*dt).T
+        x_dot = self._system_control(self.__x[2], self.__set_point - np.array([self.__x[0], self.__x[1]]))
+        self.__x = self.__x + x_dot*dt
         self.__P = self.__P + self.__Q
 
         # Kalman correction
-        self.__R = np.dot(np.dot(self.__P, self.__C.T), np.linalg.inv(np.dot(np.dot(self.__C, self.__P), self.__C.T) + self.__Q))
+        # self.__R = np.dot(np.dot(self.__C, self.__P), self.__C.T) + self.__Q
         self.__K = np.dot(np.dot(self.__P, self.__C.T), np.linalg.inv(np.dot(np.dot(self.__C, self.__P), self.__C.T) + self.__R))
         self.__x = self.__x + np.dot(self.__K, (self.__z.T - np.dot(self.__C, self.__x.T))).T
         self.__P = np.dot(np.dot(np.eye(3) - np.dot(self.__K, self.__C), self.__P), (np.eye(3) - np.dot(self.__K, self.__C)).T) + np.dot(np.dot(self.__K, self.__R), self.__K.T)

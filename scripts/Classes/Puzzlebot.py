@@ -17,6 +17,9 @@ class Puzzlebot:
         self._states = {"x":0.0, "y":0.0, "theta":0.0}
         self._v, self._w = 0.0, 0.0
 
+        # Puzzlebot control
+        self._kp = 5*np.eye(2)
+
     # Get the time difference for dt
     def _get_dt(self):
         current_time = rospy.Time.now()
@@ -31,7 +34,7 @@ class Puzzlebot:
             result += 2 * np.pi
         return result - np.pi
     
-    def system(self, kp, theta, err):
+    def _system_control(self, theta, err):
         # Control
         D = np.array([
             [(self._r / 2 * np.cos(theta) - self._h*self._r / self._l * np.sin(theta)),
@@ -39,7 +42,7 @@ class Puzzlebot:
             [(self._r / 2 * np.sin(theta) + self._h*self._r / self._l * np.cos(theta)), 
              (self._r / 2 * np.sin(theta) - self._h*self._r / self._l * np.cos(theta))]
         ])
-        u = np.dot(np.linalg.inv(D), np.dot(kp, err))
+        u = np.dot(np.linalg.inv(D), np.dot(self._kp, err))
         q_dot = np.dot(D, u)
         theta_dot = np.dot(np.array([[self._r / self._l, -self._r / self._l]]), u)
-        return q_dot, theta_dot
+        return np.array([q_dot[0], q_dot[1], theta_dot[0]])

@@ -20,7 +20,6 @@ class Controller(Puzzlebot):
         # Initialize variables
         self.__set_point = []
         self.__vmax, self.__wmax = 0.15, 0.5
-        self.__kp = 5*np.eye(2)
         self.__i = 0
 
         # Noise parameters
@@ -35,7 +34,7 @@ class Controller(Puzzlebot):
         self.__point_pub = rospy.Publisher("/point", Point32, queue_size = 10)
         
         # Subscribe to the odometry and set_point topics
-        rospy.Subscriber("/kalman", Odometry, self.__callback_odom)
+        rospy.Subscriber("/odom", Odometry, self.__callback_odom)
         rospy.Subscriber("/set_point", Polygon, self.__set_point_callback)
 
     # Callback function for the odometry
@@ -64,15 +63,14 @@ class Controller(Puzzlebot):
 
         # Control
         err = qd - q
-        q_dot, theta_dot = self.system(self.__kp, self._states["theta"], err)
+        x_dot = self._system_control(self._states["theta"], err)
 
         # Check if the robot has reached the set point
         self.__i = self.__i + 1 if np.linalg.norm(err) < 0.05 else self.__i
 
         # Add noise to the control input
-        q_dot += np.random.normal(self.__mean, self.__std)
-        theta_dot += np.random.normal(self.__mean, self.__std)
+        x_dot += np.random.normal(self.__mean, self.__std, 3)
         # Publish the velocities
-        self.__vel.linear.x = self.__vmax*np.tanh(np.sqrt(q_dot[0]**2 + q_dot[1]**2) / self.__vmax)
-        self.__vel.angular.z = self.__wmax*np.tanh(theta_dot[0] / self.__wmax)
+        self.__vel.linear.x = self.__vmax*np.tanh(np.sqrt(x_dot[0]**2 + x_dot[1]**2) / self.__vmax)
+        self.__vel.angular.z = self.__wmax*np.tanh(x_dot[2] / self.__wmax)
         self.__vel_pub.publish(self.__vel)
